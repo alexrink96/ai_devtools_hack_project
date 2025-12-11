@@ -17,7 +17,7 @@ project/
 └── src/
 ```    
 
-## Шаги запуска
+## Шаги локального запуска
 1. Клонируйте репозиторий и перейдите в корень проекта
 ```
 git clone https://github.com/alexrink96/ai_devtools_hack_project
@@ -34,9 +34,6 @@ LOG_LEVEL=INFO
 ```
 docker buildx build --platform linux/amd64 -t mcp-ad-reporting .
 ```
-**Собранный Docker-образ полностью готов к интеграции MCP-сервера на платформу Evolution AI Agents.**
-
-Чтобы проетстировать локально:
 
 4. Запустите контейнер с пробросом порта и .env
 ```
@@ -46,7 +43,7 @@ docker run -p 8000:8000 --env-file .env mcp-ad-reporting
 ```
 http://localhost:8000/mcp
 ```
-
+**Собранный Docker-образ на шаге 3 полностью готов к интеграции MCP-сервера на платформу Evolution AI Agents.**
 
 ## Промпт для агента, к которому подключен MCP-сервер
 Для корректной работы агента ему необходимо задать системный промпт:
