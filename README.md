@@ -38,7 +38,7 @@ docker buildx build --platform linux/amd64 -t mcp-ad-reporting .
 ```
 docker run -p 8000:8000 --env-file .env mcp-ad-reporting
 ```
-5. MCP-сервер доступе по ссылке:
+5. MCP-сервер доступен по ссылке:
 ```
 http://localhost:8000/mcp
 ```
