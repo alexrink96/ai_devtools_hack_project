@@ -34,6 +34,9 @@ LOG_LEVEL=INFO
 ```
 docker buildx build --platform linux/amd64 -t mcp-ad-reporting .
 ```
+**Собранный Docker-образ полностью готов к интеграции MCP-сервера на платформу Evolution AI Agents.**
+
+Чтобы проетстировать локально:
 4. Запустите контейнер с пробросом порта и .env
 ```
 docker run -p 8000:8000 --env-file .env mcp-ad-reporting
@@ -42,7 +45,7 @@ docker run -p 8000:8000 --env-file .env mcp-ad-reporting
 ```
 http://localhost:8000/mcp
 ```
-**Собранный Docker-образ полностью готов к интеграции MCP-сервера на платформу Evolution AI Agents.**
+
 
 ## Промпт для агента, к которому подключен MCP-сервер
 Для корректной работы агента ему необходимо задать системный промпт:
