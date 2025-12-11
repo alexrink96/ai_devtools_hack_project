@@ -97,7 +97,7 @@ except Exception as e:
     
 try:
     from src.tools.add_act import add_act
-    print("✅ add_advertising загружен")
+    print("✅ add_act загружен")
 except Exception as e:
     print(f"❌ Ошибка импорта add_act: {e}")
     import traceback
@@ -133,4 +133,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()
