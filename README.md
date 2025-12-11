@@ -37,6 +37,7 @@ docker buildx build --platform linux/amd64 -t mcp-ad-reporting .
 **Собранный Docker-образ полностью готов к интеграции MCP-сервера на платформу Evolution AI Agents.**
 
 Чтобы проетстировать локально:
+
 4. Запустите контейнер с пробросом порта и .env
 ```
 docker run -p 8000:8000 --env-file .env mcp-ad-reporting
