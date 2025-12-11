@@ -1,0 +1,232 @@
+{
+  "tools": [
+	{
+	  "name": "add_counterparty",
+	  "description": "Добавление контрагента. Инструмент добавляет контрагента в систему ORD.",
+	  "parameters": {
+		"name": {
+		  "type": "string",
+		  "description": "ФИО (например, Иванов Иван Иванович) или юридическое наименование (например, ООО «Север»).",
+		  "required": true
+		},
+		"roles": {
+		  "type": "array",
+		  "items": {
+			"type": "string",
+			"enum": ["advertiser", "agency", "ors", "publisher"]
+		  },
+		  "description": "Список ролей (advertiser — рекламодатель, agency — рекламное агентство, ors — оператор рекламной системы, publisher — издатель). Можно выбрать несколько.",
+		  "required": true
+		},
+		"type": {
+		  "type": "string",
+		  "enum": ["physical", "juridical", "ip", "foreign_physical", "foreign_juridical"],
+		  "description": "Тип контрагента: physical — физическое лицо, juridical — юридическое лицо, ip — ИП, foreign_physical — иностранное ФЛ, foreign_juridical — иностранное ЮЛ.",
+		  "required": true
+		},
+		"inn": {
+		  "type": "string",
+		  "pattern": "^\\d{10,12}$",
+		  "description": "ИНН контрагента (10 цифр для юр. лиц, 12 цифр для физ. лиц).",
+		  "required": true
+		}
+	  },
+	  "returns": {
+		"type": "ToolResult",
+		"description": "Возвращает данные о добавленном контрагенте: counterparty_id, status_code и полный ответ сервера."
+	  },
+	  "errors": [
+		{
+		  "code": -32602,
+		  "message": "Неверные параметры",
+		  "description": "Ошибка валидации: неверные или некорректно отформатированные значения параметров."
+		},
+		{
+		  "code": -32603,
+		  "message": "Ошибка при выполнении операции",
+		  "description": "Внутренняя ошибка при попытке добавить контрагента."
+		}
+	  ],
+	  "notes": "При добавлении выполняется валидация ФИО/названия и ИНН. Параметры roles и type должны соответствовать разрешённым значениям."
+	},
+	{
+	  "name": "add_contract",
+	  "description": "Создание договора между контрагентами. Инструмент создает договор в системе ORD.",
+	  "parameters": {
+		"client_external_id": {
+		  "type": "string",
+		  "description": "Внешний идентификатор клиента.",
+		  "required": true
+		},
+		"contractor_external_id": {
+		  "type": "string",
+		  "description": "Внешний идентификатор подрядчика.",
+		  "required": true
+		},
+		"subject_type": {
+		  "type": "string",
+		  "enum": ["representation", "org_distribution", "mediation", "distribution", "other"],
+		  "description": "Предмет договора: representation — представительство; org_distribution — организация распространения рекламы; mediation — посредничество; distribution — распространение рекламы; other — иное.",
+		  "required": true
+		},
+		"date": {
+		  "type": "string",
+		  "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+		  "description": "Дата заключения договора в формате YYYY-MM-DD. Если не указано — используется текущая дата (UTC).",
+		  "required": false
+		}
+	  },
+	  "returns": {
+		"type": "ToolResult",
+		"description": "Возвращает contract_id, status_code и полные данные ответа от сервера ORD."
+	  },
+	  "errors": [
+		{
+		  "code": -32602,
+		  "message": "Неверные параметры",
+		  "description": "Ошибка валидации: неверный формат id, даты или значения subject_type."
+		},
+		{
+		  "code": -32603,
+		  "message": "Ошибка при выполнении операции",
+		  "description": "Внутренняя ошибка при создании договора или сбой во внешнем API."
+		}
+	  ],
+	  "notes": "Дата имеет строгий формат YYYY-MM-DD. Параметр subject_type должен соответствовать одному из допустимых значений. Внешние идентификаторы должны существовать в системе ORD."
+	},
+	{
+	  "name": "add_advertising",
+	  "description": "Создание текстового рекламного креатива в ORD. Инструмент создает текстовый рекламный креатив с указанными параметрами.",
+	  "parameters": {
+		"kktus": {
+		  "type": "array",
+		  "items": {
+			"type": "string",
+			"pattern": "^\\d+\\.\\d+\\.\\d+$"
+		  },
+		  "description": "Список кодов ККТУ рекламируемых товаров или услуг. Требуется от 1 до 16 элементов. Формат: X.X.X (например, '1.1.1').",
+		  "required": true,
+		  "minItems": 1,
+		  "maxItems": 16
+		},
+		"texts": {
+		  "type": "array",
+		  "items": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 65000
+		  },
+		  "description": "Список текстов креатива. Общая максимальная длина всех текстов: 65,000 символов. Требуется хотя бы один текст.",
+		  "required": true,
+		  "minItems": 1
+		},
+		"contract_external_ids": {
+		  "type": "array",
+		  "items": {
+			"type": "string"
+		  },
+		  "description": "Список внешних идентификаторов договоров, для которых создается креатив.",
+		  "required": true,
+		  "minItems": 1
+		}
+	  },
+	  "returns": {
+		"type": "ToolResult",
+		"description": "Возвращает creative_id, erid, status_code и полный ответ от сервера ORD."
+	  },
+	  "errors": [
+		{
+		  "code": -32602,
+		  "message": "Неверные параметры",
+		  "description": "Ошибка валидации структуры ККТУ, текстов или списка договоров."
+		},
+		{
+		  "code": -32603,
+		  "message": "Ошибка при выполнении операции",
+		  "description": "Внутренняя ошибка при создании рекламного креатива или сбой во внешнем API ORD."
+		}
+	  ],
+	  "notes": "Параметр kktus должен содержать коды ККТУ в формате X.X.X. Тексты креатива должны быть непустыми. contract_external_ids должны ссылаться на существующие договоры."
+	},
+	{
+	  "name": "add_act",
+	  "description": "Создание акта по договору в VK ORD. Инструмент создает акт (invoice) по указанному договору, с датами периода, суммой и ставкой НДС.",
+	  "parameters": {
+		"contract_external_id": {
+		  "type": "string",
+		  "description": "Внешний идентификатор договора, к которому добавляется акт.",
+		  "required": true
+		},
+		"date_act": {
+		  "type": "string",
+		  "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+		  "description": "Дата выставления акта в формате YYYY-MM-DD.",
+		  "required": true
+		},
+		"date_start": {
+		  "type": "string",
+		  "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+		  "description": "Дата начала периода акта (запуск кампании). Формат: YYYY-MM-DD.",
+		  "required": true
+		},
+		"date_end": {
+		  "type": "string",
+		  "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+		  "description": "Дата окончания периода акта. Формат: YYYY-MM-DD.",
+		  "required": true
+		},
+		"excluding_vat": {
+		  "type": "number",
+		  "minimum": 0,
+		  "description": "Сумма без НДС (неотрицательная, с копейками).",
+		  "required": true
+		},
+		"vat_rate": {
+		  "type": "integer",
+		  "enum": [0, 5, 7, 10, 20],
+		  "description": "Ставка НДС. Допустимые значения: 0, 5, 7, 10, 20.",
+		  "required": true
+		},
+		"client_role": {
+		  "type": "string",
+		  "enum": ["advertiser", "agency", "ors", "publisher"],
+		  "description": "Роль клиента (заказчика) в договоре.",
+		  "required": true
+		},
+		"contractor_role": {
+		  "type": "string",
+		  "enum": ["advertiser", "agency", "ors", "publisher"],
+		  "description": "Роль подрядчика (исполнителя) в договоре.",
+		  "required": true
+		}
+	  },
+	  "returns": {
+		"type": "ToolResult",
+		"description": "Возвращает act_id, status_code и данные результата создания акта."
+	  },
+	  "errors": [
+		{
+		  "code": -32602,
+		  "message": "Неверные параметры",
+		  "description": "Ошибка валидации дат, ролей, суммы или НДС."
+		},
+		{
+		  "code": -32603,
+		  "message": "Ошибка при выполнении операции",
+		  "description": "Неожиданная ошибка или сбой во внешнем API при создании акта."
+		}
+	  ],
+	  "notes": "Даты должны быть в формате YYYY-MM-DD и согласованы между собой. Ставка НДС — строго одно из значений: 0, 5, 7, 10, 20. Сумма excluding_vat должна быть неотрицательной."
+	}
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "server_name": "mcp-ad-reporting",
+    "description": "MCP сервер для создания рекламной отчетности.",
+    "transport": "streamable-http",
+    "observability": {
+      "metrics": "Prometheus",
+      "tracing": "OpenTelemetry"
+    }
+  }
+}

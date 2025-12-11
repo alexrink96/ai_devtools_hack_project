@@ -1,0 +1,63 @@
+{
+  "environment_variables": [
+    {
+      "name": "ORD_PROVIDER",
+      "type": "string",
+      "default": "VK",
+      "description": "Выбор ОРД-провайдера (например: VK, YANDEX, SBER). Используется для определения реализации API.",
+      "required": false,
+      "validation": {
+        "enum": ["VK", "YANDEX", "SBER"]
+      },
+      "example": "VK"
+    },
+    {
+      "name": "ORD_API_KEY",
+      "type": "string",
+      "default": "",
+      "description": "API-ключ для взаимодействия с ОРД-провайдером. Обязательно для продакшена.",
+      "required": false,
+      "validation": {
+        "minLength": 1
+      },
+      "example": "my-secret-ord-token"
+    },
+    {
+      "name": "PORT",
+      "type": "integer",
+      "default": 8000,
+      "description": "Порт для запуска MCP Ad Reporting сервера.",
+      "required": false,
+      "validation": {
+        "min": 1024,
+        "max": 65535
+      },
+      "example": 8000
+    },
+    {
+      "name": "LOG_LEVEL",
+      "type": "string",
+      "default": "INFO",
+      "description": "Уровень логирования (DEBUG, INFO, WARNING, ERROR, CRITICAL).",
+      "required": false,
+      "validation": {
+        "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+      },
+      "example": "INFO"
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Описание переменных окружения MCP Ad Reporting Server",
+    "usage": {
+      "docker": "Передавайте переменные через -e или --env-file",
+      "local": "Создайте файл .env или экспортируйте переменные в shell",
+      "example": ".env.example содержит шаблон конфигурации"
+    },
+    "notes": [
+      "Все переменные имеют значения по умолчанию, кроме API-ключа",
+      "Для продакшена обязательно задайте ORD_API_KEY",
+      "Значение PORT рекомендуется менять только при запуске в Docker/Kubernetes"
+    ]
+  }
+}
